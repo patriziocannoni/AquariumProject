@@ -10,6 +10,7 @@
 #include "TaskPump.h"
 
 #define MINUTES_OFF 15
+#define SECONDS_ON 	15
 
 static void prvPumpTask(void *arg);
 
@@ -47,7 +48,7 @@ static void prvPumpTask(void *arg) {
 			// Port HIGH.
 			PORTC |= _BV(PORTC3);
 			// Delay de 15 segundos.
-			vTaskDelay(15000);
+			vTaskDelay(SECONDS_ON * 1000);
 			processState = PUMP_STOP;
 			break;
 		}

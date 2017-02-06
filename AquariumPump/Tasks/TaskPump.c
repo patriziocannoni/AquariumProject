@@ -18,8 +18,7 @@ static unsigned char processState;
 
 enum {
 	PUMP_STOP,
-	PUMP_START,
-	PUMP_IDLE
+	PUMP_START
 };
 
 void xStartPumpTask(void) {

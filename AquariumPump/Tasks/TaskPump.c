@@ -9,9 +9,6 @@
 #include <task.h>
 #include "TaskPump.h"
 
-#define MINUTES_OFF 15
-#define SECONDS_ON 	15
-
 static void prvPumpTask(void *arg);
 
 static unsigned char processState;
@@ -29,7 +26,13 @@ void xStartPumpTask(void) {
 }
 
 static void prvPumpTask(void *arg) {
+	const portTickType MINUTES_OFF = 1;
+	const portTickType SECONDS_ON = 15;
+
+	portTickType xLastWakeTime;
 	uint8_t i;
+
+	xLastWakeTime = xTaskGetTickCount();
 
 	for (;;) {
 		switch (processState) {
@@ -38,7 +41,7 @@ static void prvPumpTask(void *arg) {
 			PORTC &= ~_BV(PORTC3);
 			// Delay de MINUTES_OFF minutos.
 			for (i = 0; i < MINUTES_OFF; i++) {
-				vTaskDelay(60000);
+				vTaskDelayUntil(&xLastWakeTime, 60000 / portTICK_RATE_MS);
 			}
 			processState = PUMP_START;
 			break;
@@ -47,7 +50,7 @@ static void prvPumpTask(void *arg) {
 			// Port HIGH.
 			PORTC |= _BV(PORTC3);
 			// Delay de 15 segundos.
-			vTaskDelay(SECONDS_ON * 1000);
+			vTaskDelayUntil(&xLastWakeTime, (SECONDS_ON * 1000) / portTICK_RATE_MS);
 			processState = PUMP_STOP;
 			break;
 		}

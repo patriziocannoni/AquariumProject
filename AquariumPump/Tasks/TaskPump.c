@@ -21,6 +21,8 @@ enum {
 void xStartPumpTask(void) {
 	// Pin C3 as OUTPUT.
 	DDRC |= _BV(DDC3);
+	// Port LOW.
+	PORTC &= ~_BV(PORTC3);
 	processState = PUMP_STOP;
 	xTaskCreate(prvPumpTask, (signed portCHAR *) "PUMP", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
 }
